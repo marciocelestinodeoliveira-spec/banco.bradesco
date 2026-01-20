@@ -18,12 +18,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-app.get("/loc/:token", (req, res) => {
-  if (!validTokens.has(req.params.token)) {
-    return res.status(404).send("Link inválido.");
-  }
+app.get("/", (req, res) => res.send("OK"));
 
-  res.send(`<!doctype html>
 <html>
 <body style="font-family:Arial;padding:16px;">
 <h2>Compartilhar localização</h2>
@@ -75,4 +71,6 @@ Maps: ${maps}`
   res.json({ ok: true });
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
+  console.log("Servidor rodando");
+});
