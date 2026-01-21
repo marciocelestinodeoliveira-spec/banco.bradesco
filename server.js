@@ -76,7 +76,7 @@ app.get("/loc/:token", (req, res) => {
 
   btn.onclick = async () => {
     if (!navigator.geolocation) {
-      out.textContent = "Geolocalização não suportada.";
+      out.textContent = "erro0001939";
       return;
     }
 
@@ -87,7 +87,7 @@ app.get("/loc/:token", (req, res) => {
     try {
       pos = await getPos({ enableHighAccuracy: true, timeout: 30000, maximumAge: 0 });
     } catch (e1) {
-      out.textContent = "Alta precisão demorou. Tentando modo padrão...";
+      out.textContent = "timeout...";
       try {
         pos = await getPos({ enableHighAccuracy: false, timeout: 20000, maximumAge: 60000 });
       } catch (e2) {
