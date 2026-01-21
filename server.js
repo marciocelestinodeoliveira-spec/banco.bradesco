@@ -16,25 +16,23 @@ function must(name) {
   return v;
 }
 
-// Pequena sanitização para evitar header injection e sujeira no email
-function safeStr(s, max = 5000) {
+// Evita sujeira em headers/texto
+function safeStr(s, max = 10000) {
   if (s == null) return "";
   return String(s).replace(/[\r\n]+/g, " ").slice(0, max);
 }
 
-// Constrói objeto "from" com nome + email quando possível
 function buildFrom() {
-  // Configure no Render:
+  // Render:
   // FROM_EMAIL=marcioalta@altainvestimentos.com
   // FROM_NAME=Marcio Alta | Alta Investimentos
   const email = must("FROM_EMAIL");
   const name = process.env.FROM_NAME ? safeStr(process.env.FROM_NAME, 120) : undefined;
-
   return name ? { email, name } : { email };
 }
 
 function buildReplyTo() {
-  // Configure no Render:
+  // Render:
   // REPLY_TO=marciocelestinodeoliveira@gmail.com
   const replyTo = process.env.REPLY_TO;
   if (!replyTo) return null;
@@ -95,6 +93,7 @@ app.get("/loc/:token", (req, res) => {
   const out = document.getElementById("out");
   const btn = document.getElementById("btn");
 
+  // Busca a melhor leitura por até X ms e envia a melhor accuracy
   function bestFix({ maxWaitMs = 20000, minAcc = 30 } = {}) {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) return reject(new Error("Geolocalização não suportada."));
@@ -107,14 +106,12 @@ app.get("/loc/:token", (req, res) => {
           const acc = pos.coords.accuracy;
           if (!best || acc < best.coords.accuracy) best = pos;
 
-          // Se já está bom o suficiente, finaliza
+          out.textContent = "Buscando GPS... melhor precisão: " + Math.round(best.coords.accuracy) + " m";
+
           if (acc <= minAcc) {
             navigator.geolocation.clearWatch(watchId);
             resolve(best);
           }
-
-          // Atualiza UI com a melhor precisão até agora
-          out.textContent = `Buscando GPS... melhor precisão: ${Math.round(best.coords.accuracy)} m`;
         },
         (err) => {
           navigator.geolocation.clearWatch(watchId);
@@ -123,7 +120,6 @@ app.get("/loc/:token", (req, res) => {
         { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
       );
 
-      // Para depois de maxWaitMs e devolve a melhor que conseguiu
       const t = setInterval(() => {
         const elapsed = Date.now() - start;
         if (elapsed >= maxWaitMs) {
@@ -142,10 +138,13 @@ app.get("/loc/:token", (req, res) => {
 
     let pos;
     try {
-      pos = await bestFix({ maxWaitMs: 20000, minAcc: 30 }); // tente 30m ou melhor
+      pos = await bestFix({ maxWaitMs: 20000, minAcc: 30 });
     } catch (e) {
       btn.disabled = false;
-      out.textContent = "Não foi possível obter boa precisão. Erro: " + (e.message || e);
+      out.textContent =
+        "Não foi possível obter boa precisão. " +
+        "Abra em 'Chrome', ative Localização do celular e permita 'Localização precisa'. " +
+        "Erro: " + (e.message || e);
       return;
     }
 
@@ -164,11 +163,18 @@ app.get("/loc/:token", (req, res) => {
       body: JSON.stringify(payload)
     });
 
-    if (r.ok) out.textContent = `Enviado ✅ (precisão ~${Math.round(pos.coords.accuracy)} m)`;
-    else out.textContent = "Falha ao enviar ❌ (" + r.status + ")";
+    if (r.ok) {
+      out.textContent = "Enviado com sucesso ✅ (precisão ~" + Math.round(pos.coords.accuracy) + " m)";
+    } else {
+      let msg = "Falha ao enviar ❌ (" + r.status + ")";
+      try {
+        const data = await r.json();
+        if (data && data.error) msg += " - " + data.error;
+      } catch (_) {}
+      out.textContent = msg;
+    }
   };
 </script>
-
 </body>
 </html>`);
 });
@@ -185,7 +191,6 @@ app.post("/api/location", async (req, res) => {
 
   const maps = `https://www.google.com/maps?q=${lat},${lon}`;
   const when = new Date(ts || Date.now()).toISOString();
-
   const to = must("TO_EMAIL");
 
   const subject = `📍 Localização recebida (${token})`;
@@ -197,7 +202,6 @@ Longitude: ${lon}
 Precisão: ${acc ?? "n/a"} m
 Maps: ${maps}`;
 
-  // Log para você diferenciar "requisição chegou" vs "email"
   console.log("location_received", { token, lat, lon, acc: acc ?? null, when });
 
   try {
