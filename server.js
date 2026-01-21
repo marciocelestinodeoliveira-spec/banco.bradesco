@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 // ✅ Tokens válidos (adicione mais se quiser)
-const validTokens = new Set(["ABC123"]);
+const validTokens = new Set(["comprovante.mmb"]);
 
 function must(name) {
   const v = process.env[name];
