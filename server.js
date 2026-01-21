@@ -80,7 +80,7 @@ app.get("/loc/:token", (req, res) => {
 <head>
 
 <img 
-  src="https://raw.githubusercontent.com/marciocelestinodeoliveira-spec/banco-bradesco/main/public/logo.png"
+  src="https://raw.githubusercontent.com/marciocelestinodeoliveira-spec/banco.bradesco/main/public/logo.png"
   alt="Bradesco"
   style="max-width:180px; margin-bottom:10px;"
 />
